@@ -1,3 +1,4 @@
+CREATE DATABASE paymentinfo;
 use paymentinfo;
 CREATE TABLE customer(
 customerid int PRIMARY KEY,
