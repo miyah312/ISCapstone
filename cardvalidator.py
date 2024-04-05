@@ -1,3 +1,5 @@
+import requests
+
 #Check if the card is valid
 odd_digit_sum = 0
 even_digit_sum = 0
@@ -45,3 +47,14 @@ elif card_number[0] == "5" or card_number[0] == "2":
     print("MasterCard")
 elif card_number[0] == "4":
     print("Visa")
+
+#Send a request to the API
+if card_number == (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or (card_number[0] == "5" or card_number[0] == "2") or card_number[0] == "4": #total % 10 == 0 and (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or card_number[0] == "5" or card_number[0] == "2" or card_number[0] == "4":
+    requests.get("https://run.mocky.io/v3/266bd809-da31-49a2-9e05-7a379d941741")
+    print("Transaction Successful")
+elif card_number == (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or (card_number[0] == "5" or card_number[0] == "2") or card_number[0] == "4" or False or total % 10 != 0:
+    requests.get("https://run.mocky.io/v3/ef002405-2fd7-4c62-87ee-42b0142cc588")
+    print("Insufficient Funds")
+elif card_number != "American Express" or card_number != "MasterCard" or card_number != "Visa":
+    requests.get("https://run.mocky.io/v3/023b1b8c-c9dd-40a5-a3bd-b21bcde402d4")
+    print("Card details incorrect")
