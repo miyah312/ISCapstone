@@ -11,8 +11,15 @@ card_number = card_number.replace("-", "")
 card_number = card_number.replace(" ", "")
 card_number=card_number[0:]
 
+#Check CVV of card
+cvv = input("Enter CVV: ")
+if len(cvv) == 3 or len(cvv) == 4:
+    print(" ")
+else:
+    print("Invalid CVV")
+
 '''expire_date = input("Enter expiration date: ")
-if expiration_date > 12/22:
+if expiration_date > "12/22":
     print("Card is expired")
 else:
     print("Valid")'''
@@ -49,12 +56,27 @@ elif card_number[0] == "4":
     print("Visa")
 
 #Send a request to the API
-if card_number == (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or (card_number[0] == "5" or card_number[0] == "2") or card_number[0] == "4": #total % 10 == 0 and (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or card_number[0] == "5" or card_number[0] == "2" or card_number[0] == "4":
+if card_number == (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or (card_number[0] == "5" or card_number[0] == "2") or card_number[0] == "4": 
+#if card_number == "Valid":
     requests.get("https://run.mocky.io/v3/266bd809-da31-49a2-9e05-7a379d941741")
     print("Transaction Successful")
-elif card_number == (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or (card_number[0] == "5" or card_number[0] == "2") or card_number[0] == "4" or False or total % 10 != 0:
+#elif card_number != (card_number[0] == "3" and card_number[1] == "4" or card_number[1] == "7") or (card_number[0] == "5" or card_number[0] == "2") or card_number[0] == "4" or total % 10 != 0:
+elif card_number == "Invalid" or total % 10 != 0:
     requests.get("https://run.mocky.io/v3/ef002405-2fd7-4c62-87ee-42b0142cc588")
-    print("Insufficient Funds")
-elif card_number != "American Express" or card_number != "MasterCard" or card_number != "Visa":
+    print("Insufficient Funds on card ending in " + card_number[-4:])
+elif card_number != "American Express" or card_number != "MasterCard" or card_number != "Visa" or cvv != len(cvv) == 3 or len(cvv) == 4 or expire_date < "12/25" or total % 10 != 0:
+#elif total % 10 != 0 or card_number[0] != "3" and card_number[1] != "4" or card_number[1] != "7" or card_number[0] != "5" or card_number[0] != "2" or card_number[0] != "4":
+#elif card_number == total % 10 != 0: 
+#else:
     requests.get("https://run.mocky.io/v3/023b1b8c-c9dd-40a5-a3bd-b21bcde402d4")
-    print("Card details incorrect")
+    print("Card Details incorrect or missing on Card Ending in " + card_number[-4:])
+
+   
+	
+#Test Cases
+'''
+5555555555554444 (This card is successful and is valid use CVV 123 - Mastercard)*
+3782822463100055 (This card is invalid but has insufficient funds use CVV 2343 - AMEX)*
+6011111111111117 (This card is valid but is not supported use CVV 345 - )*
+4012888888881881(This card is invalid and has insufficient funds use CVV 463)*
+4222222222222 (This card is valid use CVV 345 - VISA)*
