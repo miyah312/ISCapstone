@@ -23,3 +23,35 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+const userSchema = new mongoose.Schema({
+  email: String,
+  phone: String,
+  firstName: String,
+  lastName: String,
+  street: String,
+  aptUnit: String,
+  city: String,
+  state: String,
+  zip: String,
+  country: String,
+  cardNumber: String,
+  expDate: String,
+  cvv: String
+});
+const User = mongoose.model('User', userSchema);
+
+// Endpoint to handle form submission
+app.post('/api/add-user', async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
