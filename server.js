@@ -1,21 +1,25 @@
 const express = require('express');
-const mongodb = require('mongodb');
+const mongoose = require('mongoose');
 const app = express();
-const port = 3001;
+const PORT = process.env.PORT || 5000;
 
-const { MongoClient } = require('mongodb');
-const url = "mongodb+srv://myaangel312:gjcnIsB5Qyg9V1c3@cluster0.clfet6q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+app.use(express.json());
 
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  console.log("Database connected!");
-  db.close();
+// Connect to MongoDB Atlas
+mongoose.connect('mongodb+srv://amiyahrichardson312:RP7Fgu5P4dVtkOqk@iscapstonedb.aoacdzs.mongodb.net/?retryWrites=true&w=majority&appName=ISCapstoneDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB Atlas');
+}).catch(err => {
+  console.error('Error connecting to MongoDB Atlas:', err);
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+// Define routes
+app.use('/api', require('./routes/api'));
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`)
-});

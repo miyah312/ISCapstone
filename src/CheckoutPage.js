@@ -16,9 +16,53 @@ const CheckoutPage = () => {
   const [expDate, setExpDate] = useState('');
   const [cvv, setCvv] = useState('');
 
+  const submitButton = document.getElementById('submit-button');
+
+  submitButton.addEventListener('click', sendData);
+
+  function sendData(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    
+    const username = document.getElementById('username-input').value;
+    // You can get other form input values in a similar manner
+  
+    const formData = {
+      username: username,
+      // Add other form data properties as needed
+    };
+  
+    // Send the data to the backend
+    sendDataToBackend(formData);
+  }
+  function sendDataToBackend(formData) {
+    fetch('/api/add-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      // Handle success response from the backend if needed
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle error
+    });
+  }
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add submission logic here
+    //submission logic here
+    
+
     console.log('Submitted');
   };
 
