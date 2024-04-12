@@ -18,11 +18,12 @@ if len(cvv) == 3 or len(cvv) == 4:
 else:
     print("Invalid CVV")
 
+#Check expiration date of card
 '''expire_date = input("Enter expiration date: ")
-if expiration_date > "12/22":
-    print("Card is expired")
+if expire_date > "12/25":
+    print(" ")
 else:
-    print("Valid")'''
+    print("Invalid expiration date")'''
 
 #Mask the credit card number        
 def mask_credit_card(card_number):
