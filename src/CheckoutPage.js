@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import axios from 'axios'; // Import Axios library
 import { TextField, Button, Container, Grid, Typography, Divider } from '@mui/material';
+
+axios.defaults.baseURL = 'http://localhost:5000';
 
 const CheckoutPage = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +18,6 @@ const CheckoutPage = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [expDate, setExpDate] = useState('');
   const [cvv, setCvv] = useState('');
-
 
   function sendDataToBackend(formData) {
     fetch('/api/add-user', {
@@ -40,6 +42,7 @@ const CheckoutPage = () => {
       // Handle error
     });
   }
+
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,26 +62,13 @@ const CheckoutPage = () => {
       cvv
     };
     try {
-      const response = await fetch('/api/add-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      const data = await response.json();
-      console.log('Success:', data);
-      // Handle success response from the backend if needed
+      const response = await axios.post('http://localhost:5000/api/add-user', formData);
+      console.log('Yay success:', response.data);
+      // Handle success response
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Oh no an error:', error);
       // Handle error
-    }
-  };
+    } };    
 
   return (
     <Container maxWidth="sm">

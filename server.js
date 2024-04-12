@@ -1,9 +1,15 @@
 const express = require('express');
+const cors = require('cors'); // Import cors middleware
 const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 5000;
+const User = require('./models/User');
 
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
 
 // Connect to MongoDB Atlas
 mongoose.connect('mongodb+srv://amiyahrichardson312:RP7Fgu5P4dVtkOqk@iscapstonedb.aoacdzs.mongodb.net/?retryWrites=true&w=majority&appName=ISCapstoneDB', {
@@ -15,14 +21,8 @@ mongoose.connect('mongodb+srv://amiyahrichardson312:RP7Fgu5P4dVtkOqk@iscapstoned
   console.error('Error connecting to MongoDB Atlas:', err);
 });
 
-// Define routes
-app.use('/api', require('./routes/api'));
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
+// Define User schema and model
+// Define User schema and model
 const userSchema = new mongoose.Schema({
   email: String,
   phone: String,
@@ -38,9 +38,8 @@ const userSchema = new mongoose.Schema({
   expDate: String,
   cvv: String
 });
-const User = mongoose.model('User', userSchema);
 
-// Endpoint to handle form submission
+//Submission form
 app.post('/api/add-user', async (req, res) => {
   try {
     const newUser = new User(req.body);
