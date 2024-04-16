@@ -19,18 +19,18 @@ else:
     print("Invalid CVV")
 
 #Check expiration date of card
-'''expire_date = input("Enter expiration date: ")
-if expire_date > "12/25":
+expire_date = input("Enter expiration date: ")
+if expire_date > "01/25":
     print(" ")
 else:
-    print("Invalid expiration date")'''
+    print("Invalid expiration date")
 
 #Mask the credit card number        
 def mask_credit_card(card_number):
     return "XXXXXXXXXXXX" + card_number[-4:]
 print(mask_credit_card(card_number))    
 
-
+#Check if the card is valid
 for x in card_number[::2]:
     odd_digit_sum += int(x)
 
@@ -79,5 +79,4 @@ elif card_number != "American Express" or card_number != "MasterCard" or card_nu
 5555555555554444 (This card is successful and is valid use CVV 123 - Mastercard)*
 3782822463100055 (This card is invalid but has insufficient funds use CVV 2343 - AMEX)*
 6011111111111117 (This card is valid but is not supported use CVV 345 - )*
-4012888888881881(This card is invalid and has insufficient funds use CVV 463)*
 4222222222222 (This card is valid use CVV 345 - VISA)*
