@@ -22,7 +22,6 @@ mongoose.connect('mongodb+srv://amiyahrichardson312:RP7Fgu5P4dVtkOqk@iscapstoned
 });
 
 // Define User schema and model
-// Define User schema and model
 const userSchema = new mongoose.Schema({
   email: String,
   phone: String,
