@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors'); // Import cors middleware
+const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,8 +10,6 @@ app.use(cors({
   origin: 'http://localhost:3000'
 }));
 
-
-// Connect to MongoDB Atlas
 mongoose.connect('mongodb+srv://amiyahrichardson312:RP7Fgu5P4dVtkOqk@iscapstonedb.aoacdzs.mongodb.net/?retryWrites=true&w=majority&appName=ISCapstoneDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -21,7 +19,6 @@ mongoose.connect('mongodb+srv://amiyahrichardson312:RP7Fgu5P4dVtkOqk@iscapstoned
   console.error('Error connecting to MongoDB Atlas:', err);
 });
 
-// Define User schema and model
 const userSchema = new mongoose.Schema({
   email: String,
   phone: String,
@@ -38,18 +35,27 @@ const userSchema = new mongoose.Schema({
   cvv: String
 });
 
-//Submission form
-app.post('/api/add-user', async (req, res) => {
+app.post('/api/add-user', async (req, res, next) => {
   try {
     const newUser = new User(req.body);
     await newUser.save();
     res.status(201).json(newUser);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    if (err.name === 'ValidationError') {
+    err.status = 400; // Set the status code for validation errors
+  } else {
+    err.status = 500; // Set the status code for other errors
+  }
+    next(err); 
   }
 });
 
-// Start the server
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  console.error(err.message); // Log the error message
+  res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

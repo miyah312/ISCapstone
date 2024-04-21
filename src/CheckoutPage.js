@@ -1,74 +1,71 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios library
+import axios from 'axios';
 import { TextField, Button, Container, Grid, Typography, Divider } from '@mui/material';
+import isValidCard from './CardValidator';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
 const CheckoutPage = () => {
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [street, setStreet] = useState('');
-  const [aptUnit, setAptUnit] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zip, setZip] = useState('');
-  const [country, setCountry] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expDate, setExpDate] = useState('');
-  const [cvv, setCvv] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    phone: '',
+    firstName: '',
+    lastName: '',
+    street: '',
+    aptUnit: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: '',
+    cardNumber: '',
+    maskedCardNumber: '',
+    expDate: '',
+    cvv: '',
+    maskedCvv:'',
+  });
 
-  function sendDataToBackend(formData) {
-    fetch('/api/add-user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Success:', data);
-      // Handle success response from the backend if needed
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      // Handle error
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
-  }
+  };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
-      email,
-      phone,
-      firstName,
-      lastName,
-      street,
-      aptUnit,
-      city,
-      state,
-      zip,
-      country,
-      cardNumber,
-      expDate,
-      cvv
-    };
+
+    // Validate credit card
+    if (!isValidCard(formData)) {
+      console.error('Invalid credit card');
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:5000/api/add-user', formData);
-      console.log('Yay success:', response.data);
+      const response = await axios.post('/api/add-user', formData);
+      console.log('YAY! Success:', response.data);
       // Handle success response
     } catch (error) {
       console.error('Oh no an error:', error);
       // Handle error
-    } };    
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up the request:', error.message);
+      }
+    }
+  };
 
   return (
     <Container maxWidth="sm">
@@ -83,18 +80,18 @@ const CheckoutPage = () => {
               required
               fullWidth
               label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+              />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               required
               fullWidth
               label="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
           </Grid>
         </Grid>
         <Typography variant="h6" gutterBottom>
@@ -107,8 +104,8 @@ const CheckoutPage = () => {
               required
               fullWidth
               label="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={formData.firstName}
+              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} 
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -116,62 +113,62 @@ const CheckoutPage = () => {
               required
               fullWidth
               label="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
+              value={formData.lastName}
+              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+              />
           </Grid>
           <Grid item xs={12}>
             <TextField
               required
               fullWidth
               label="Street"
-              value={street}
-              onChange={(e) => setStreet(e.target.value)}
-            />
+              value={formData.street}
+              onChange={(e) => setFormData({ ...formData, street: e.target.value })} 
+              />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
               label="Apt/Unit"
-              value={aptUnit}
-              onChange={(e) => setAptUnit(e.target.value)}
-            />
+              value={formData.aptUnit}
+              onChange={(e) => setFormData({ ...formData, aptUnit: e.target.value })} 
+              />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               required
               fullWidth
               label="City"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-            />
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              />
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
               required
               fullWidth
               label="State"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-            />
+              value={formData.state}
+              onChange={(e) => setFormData({ ...formData, state: e.target.value })} 
+              />
           </Grid>
           <Grid item xs={12} sm={2}>
             <TextField
               required
               fullWidth
               label="ZIP"
-              value={zip}
-              onChange={(e) => setZip(e.target.value)}
-            />
+              value={formData.zip}
+              onChange={(e) => setFormData({ ...formData, zip: e.target.value })} // Update phone in formData
+              />
           </Grid>
           <Grid item xs={12}>
             <TextField
               required
               fullWidth
               label="Country"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-            />
+              value={formData.country}
+              onChange={(e) => setFormData({ ...formData, country: e.target.value })} // Update phone in formData
+              />
           </Grid>
         </Grid>
         <Typography variant="h6" gutterBottom>
@@ -184,32 +181,34 @@ const CheckoutPage = () => {
               required
               fullWidth
               label="Card Number"
-              value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
-            />
+              value={formData.cardNumber} // Use maskedCardNumber
+              onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })} // Update phone in formData
+              />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               required
               fullWidth
               label="Expiration Date"
-              value={expDate}
-              onChange={(e) => setExpDate(e.target.value)}
-            />
+              value={formData.expDate}
+              onChange={(e) => setFormData({ ...formData, expDate: e.target.value })} // Update phone in formData
+              />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               required
               fullWidth
               label="CVV"
-              value={cvv}
-              onChange={(e) => setCvv(e.target.value)}
-            />
+              value={formData.cvv} // Use maskedCvv
+              onChange={(e) => setFormData({ ...formData, cvv: e.target.value })} // Update phone in formData
+              />
           </Grid>
         </Grid>
         <Button type="submit" variant="contained" color="primary">
           Checkout
         </Button>
+        {successMessage && <Typography variant="body1" color="success">{successMessage}</Typography>}
+        {errorMessage && <Typography variant="body1" color="error">{errorMessage}</Typography>}
       </form>
     </Container>
   );
