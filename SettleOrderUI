@@ -51,8 +51,17 @@
 </div>
 
 <script>
+    var orders = [
+        { orderId: '001', customerName: 'John Doe', amountPaid: 150.00, paymentStatus: 'Paid' },
+        { orderId: '002', customerName: 'Jane Smith', amountPaid: 200.00, paymentStatus: 'Pending' },
+        { orderId: '003', customerName: 'Alex Johnson', amountPaid: 100.00, paymentStatus: 'Paid' },
+        { orderId: '004', customerName: 'Emily Brown', amountPaid: 180.00, paymentStatus: 'Paid' },
+        { orderId: '005', customerName: 'Michael Lee', amountPaid: 220.00, paymentStatus: 'Pending' },
+        { orderId: '006', customerName: 'Sophia Rodriguez', amountPaid: 0.00, paymentStatus: 'Payment Unauthorized' }
+    ];
+
     // Predefined list of valid orders
-    var validOrders = ['001', '002', '003', '004', '005'];
+    var validOrders = orders.map(order => order.orderId);
 
     document.getElementById('settle-order-form').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -73,9 +82,16 @@
     });
 
     function settleOrder(orderId, finalAmount) {
-        // Here you can implement the logic for settling the order
-        // For demo purpose, just return a message indicating success
-        return `Order ${orderId} settled successfully. Final amount: $${finalAmount.toFixed(2)}`;
+        // Find the order details
+        var order = orders.find(order => order.orderId === orderId);
+
+        if (finalAmount <= order.amountPaid) {
+            // If the final amount is less than or equal to the authorized payment
+            return `Payment authorized for Order ${orderId}. Final amount: $${finalAmount.toFixed(2)}`;
+        } else {
+            // If the final amount is more than the authorized payment
+            return 'Final Amount is higher than authorized payment';
+        }
     }
 </script>
 
